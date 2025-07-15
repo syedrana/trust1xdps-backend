@@ -62,9 +62,11 @@ app.use(express.json());
 
 app.use(cors({
   origin: ['https://trust1xdps.com', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 app.use("/uploads", express.static("uploads"));
 
