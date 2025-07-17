@@ -28,7 +28,7 @@ const userdepositdetail = require("./Controller/userDepositDetailController.js")
 const approveuser = require("./Controller/approveuserController.js");
 const approvedusercount = require("./Controller/approvedUserCountController.js");
 const pendingusercount = require("./Controller/pendingUserCountController.js");
-const user = require("./Controller/userController");
+const {registration, verifyEmail} = require("./Controller/userController");
 const { getMe, updateProfile } = require("./Controller/userDetailController.js");
 const userdashboard = require("./Controller/userDashboardController.js");
 const userdepositlist = require("./Controller/userDepositListController.js");
@@ -96,7 +96,8 @@ app.get("/approveuser", adminCheck, approveuser);
 app.get("/approvedusercount", adminCheck, approvedusercount);
 app.get("/pendingusercount", adminCheck, pendingusercount);
 app.get("/pendingapproval", adminCheck, pendingapproval);
-app.post("/user", updateimg.single('image'), securapi, user);
+app.post("/user", updateimg.single('image'), securapi, registration);
+app.get("/verify/:token", securapi, verifyEmail);
 app.get("/me", checkLogin, getMe);
 app.put("/update", checkLogin, updateimg.single('image'), updateProfile);
 app.get("/userdashboard", checkLogin, userdashboard);

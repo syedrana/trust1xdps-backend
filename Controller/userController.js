@@ -1,266 +1,14 @@
-    // const User = require("../Model/userModel");
-
-    // let registration = async (req, res) => {
-
-    //     try {
-    //         const { firstName, lastName, address, email, mobile, nid, reference, nomineeName, nomineeRelation, nomineeMobile, password, confirmPassword } = req.body;
-            
-    //         const image = req.file ? `http://localhost:7000/uploads/${req.file.filename}` : "";
-
-    //         // Required field validation
-    //         if (!firstName || !lastName || !address || !email || !mobile || !nid || !nomineeName || !nomineeRelation || !nomineeMobile || !password || !confirmPassword) {
-    //         return res.status(400).send("All fields are required");
-    //         }
-
-    //         // Email format check
-    //         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //         if (!pattern.test(email)) {
-    //         return res.status(400).send("Invalid email");
-    //         }
-
-    //         // Password match check
-    //         if (password !== confirmPassword) {
-    //         return res.status(400).send("Password do not match");
-    //         }
-
-    //         // Password strength check
-    //         const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,16}$/;
-    //         if (!strongPassword.test(password)) {
-    //         return res.status(400).send("Password must be 8-16 characters with uppercase, lowercase, number, and symbol");
-    //         }
-
-    //         // Check if user already exists
-    //         const existingUser = await User.findOne({ email });
-    //         if (existingUser) {
-    //         return res.status(400).send("User Already Exists");
-    //         }
-                
-
-
-    //         // bcrypt.hash(password, 10, async function (err, hash) {});
-
-    //         let user = new User({
-    //             firstName: firstName,
-    //             lastName: lastName,
-    //             address: address,
-    //             email: email,
-    //             mobile: mobile,
-    //             nid: nid,
-    //             image: image,
-    //             reference: reference,
-    //             nomineeName: nomineeName,
-    //             nomineeRelation: nomineeRelation,
-    //             nomineeMobile: nomineeMobile,
-    //             password: password,
-    //             isVerified: false,
-    //             isApproved: false
-    //         })
-
-    //         await user.save();
-            
-    //         res.send({
-    //             message: "User Registration Successful",
-    //             id: user._id,
-    //             firstName: user.firstName,
-    //             lastName: user.lastName,
-    //             address: user.address,
-    //             email: user.email,
-    //             mobile: user.mobile,
-    //             nid: user.nid,
-    //             reference: user.reference,
-    //             image: user.image,
-    //             nomineeName: user.nomineeName,
-    //             nomineeRelation: user.nomineeRelation,
-    //             nomineeMobile: user.nomineeMobile,
-    //         });
-    //     } catch {
-    //         console.error("Contact form error:", error);
-
-    //         // Mongoose validation errors
-    //         if (error.name === "ValidationError") {
-    //             const messages = Object.values(error.errors).map(val => val.message);
-    //             return res.status(400).json({ success: false, message: messages.join(", ") });
-    //         }
-
-    //         // Duplicate email error
-    //         if (error.code === 11000 && error.keyPattern.email) {
-    //             return res.status(400).json({ success: false, message: "Email already exists" });
-    //         }
-
-    //         res.status(500).json({
-    //             success: false,
-    //             message: "Server Error",
-    //         });
-    //     }
-    // };
-
-    // module.exports = registration;
-
-
-
-
-    // const transporter = nodemailer.createTransport({
-            //     service: "gmail",
-            //     auth: {
-            //         User: "7syedrana@gmail.com",
-            //         pass: " ",
-            //     },
-            // });
-
-            // const info = await transporter.sendMail({
-            //     from: 'Todolist',
-            //     To: " ",
-            //     subject: " ",
-            //     html: "",
-            // })
-
-
-
-
-
-
-
-
-
-
-// const User = require("../Model/userModel");
-
-// const registration = async (req, res) => {
-//   try {
-//     const {
-//       firstName,
-//       lastName,
-//       address,
-//       email,
-//       mobile,
-//       nid,
-//       reference,
-//       nomineeName,
-//       nomineeRelation,
-//       nomineeMobile,
-//       password,
-//       confirmPassword,
-//     } = req.body;
-
-//     const image = req.file ? `http://localhost:7000/uploads/${req.file.filename}` : "";
-
-//     // Required field validation
-//     if (
-//       !firstName ||
-//       !lastName ||
-//       !address ||
-//       !email ||
-//       !mobile ||
-//       !nid ||
-//       !nomineeName ||
-//       !nomineeRelation ||
-//       !nomineeMobile ||
-//       !password ||
-//       !confirmPassword
-//     ) {
-//       return res.status(400).send("All fields are required");
-//     }
-
-//     // Email format check
-//     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!pattern.test(email)) {
-//       return res.status(400).send("Invalid email");
-//     }
-
-//     // Password match check
-//     if (password !== confirmPassword) {
-//       return res.status(400).send("Passwords do not match");
-//     }
-
-//     // Password strength check
-//     const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,16}$/;
-//     if (!strongPassword.test(password)) {
-//       return res
-//         .status(400)
-//         .send("Password must be 8-16 characters with uppercase, lowercase, number, and symbol");
-//     }
-
-//     // Check if user already exists
-//     const existingUser = await User.findOne({ email });
-//     if (existingUser) {
-//       return res.status(400).send("User Already Exists");
-//     }
-
-//     // Create new user
-//     let user = new User({
-//       firstName,
-//       lastName,
-//       address,
-//       email,
-//       mobile,
-//       nid,
-//       image,
-//       reference,
-//       nomineeName,
-//       nomineeRelation,
-//       nomineeMobile,
-//       password,
-//       confirmPassword, // ✅ virtual field required for pre-save hook
-//     });
-
-//     await user.save();
-
-//     res.send({
-//       message: "User Registration Successful",
-//       id: user._id,
-//       firstName: user.firstName,
-//       lastName: user.lastName,
-//       address: user.address,
-//       email: user.email,
-//       mobile: user.mobile,
-//       nid: user.nid,
-//       reference: user.reference,
-//       image: user.image,
-//       nomineeName: user.nomineeName,
-//       nomineeRelation: user.nomineeRelation,
-//       nomineeMobile: user.nomineeMobile,
-//     });
-//   } catch (error) {
-//     console.error("Registration error:", error);
-
-//     if (error.name === "ValidationError") {
-//       const messages = Object.values(error.errors).map((val) => val.message);
-//       return res.status(400).json({ success: false, message: messages.join(", ") });
-//     }
-
-//     if (error.code === 11000 && error.keyPattern?.email) {
-//       return res.status(400).json({ success: false, message: "Email already exists" });
-//     }
-
-//     res.status(500).json({
-//       success: false,
-//       message: "Server Error",
-//     });
-//   }
-// };
-
-// module.exports = registration;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const User = require("../Model/userModel");
+const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER, // ✅ Your Gmail
+    pass: process.env.GMAIL_PASS, // ✅ App Password
+  },
+});
 
 const registration = async (req, res) => {
   try {
@@ -346,9 +94,34 @@ const registration = async (req, res) => {
       nomineeMobile,
       password,
       confirmPassword, // Needed for pre-save validation hooks
+      isVerified: false,
     });
 
     await user.save();
+
+    // ✅ Send Verification Email
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${token}`;
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: email,
+      subject: "Verify Your Email - Trust1xDPS",
+      html: `
+        <h2>Hello ${firstName},</h2>
+        <p>Thank you for registering. Please verify your email by clicking the link below:</p>
+        <a href="${verificationUrl}" target="_blank">Verify Email</a>
+        <p>This link will expire in 24 hours.</p>
+      `,
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("Email send error:", err);
+      } else {
+        console.log("Verification email sent:", info.response);
+      }
+    });
 
     // ✅ Success response
     res.status(201).json({
@@ -388,4 +161,30 @@ const registration = async (req, res) => {
   }
 };
 
-module.exports = registration;
+// ✅ Email Verification Controller
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) return res.status(400).send("Invalid verification link");
+
+    if (user.isVerified) {
+      return res.send("Your email is already verified.");
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    res.send("Your email has been successfully verified! You can now log in.");
+  } catch (err) {
+    console.error("Verification Error:", err);
+    res.status(400).send("Verification link expired or invalid.");
+  }
+};
+
+module.exports = {
+  registration,
+  verifyEmail,
+};

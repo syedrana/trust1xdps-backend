@@ -18,6 +18,12 @@ let login = async (req, res) => {
         let exitingUser = await User.findOne({email:email})
 
         if (exitingUser){
+
+             // ✅ Check if user is approved by admin
+            if (!exitingUser.isApproved) {
+                return res.status(400).send("Your account is pending admin approval.");
+            }
+
             bcrypt.compare(password, exitingUser.password, function(err, result) {
                 if (result){
 
