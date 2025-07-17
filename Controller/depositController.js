@@ -71,7 +71,7 @@ const generateReceiptNo = () => {
 // POST /deposit/:userId
 const deposit = async (req, res) => {
   const { id } = req.params;
-  const { amount, month, note, paymentMethod, receivedBy, transaction } = req.body;
+  const { amount, month, note, paymentMethod, transaction } = req.body;
 
   if (!amount || !month) {
     return res.status(400).json({ message: "Amount and month are required." });
@@ -98,12 +98,12 @@ const deposit = async (req, res) => {
       userId: id,
       amount: amount,
       month: month,
-      note: note || "",
       paymentMethod: paymentMethod,
-      receivedBy: receivedBy,
+      receivedBy: "Admin",
       transaction: transaction,
       status: "Approved",
       receiptNo: generateReceiptNo(),
+      note: note || "",
     });
 
     await newDeposit.save();

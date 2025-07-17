@@ -316,6 +316,7 @@ const getUsersNotDepositedThisMonth = async (req, res) => {
         mobile: user.mobile,
         address: user.address,
         image: user.image,
+        approvedAt: user.approvedAt,
         startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
         depositedMonths: Array.from(depositedMonths),
         missingMonths,
