@@ -362,6 +362,7 @@ const registration = async (req, res) => {
 };
 
 // ✅ Email Verification Controller
+
 const verifyEmail = async (req, res) => {
   try {
     const { token } = req.params;
@@ -383,5 +384,6 @@ const verifyEmail = async (req, res) => {
     res.status(400).send("Verification link expired or invalid.");
   }
 };
+
 
 module.exports = { registration, verifyEmail };
