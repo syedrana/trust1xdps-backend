@@ -44,6 +44,10 @@ const mongoose = require("mongoose");
       required: [true, "Image URL is required"],
       match: [/^https?:\/\/.+\.(jpg|jpeg|png|webp|svg)$/, "Image must be a valid image URL"],
     },
+    imagePublicId: {
+      type: String,
+      required: true,
+    },
     reference: {
       type: String,
       trim: true,
@@ -68,11 +72,13 @@ const mongoose = require("mongoose");
       type: String,
       required: [true, "Password is required"],
       minLength: [6, "Password must be at least 6 characters"],
+      maxLength: [16, "Password must be at most 16 characters"],
       match: [
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-        "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character",
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{6,16}$/,
+        "Password must be 6-16 chars, include upper, lower, number & symbol",
       ],
     },
+
     isVerified: {
       type: Boolean,
       default: false,

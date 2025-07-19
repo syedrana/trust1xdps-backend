@@ -196,6 +196,7 @@
 
 
 const User = require("../Model/userModel");
+const { cloudinary } = require("../Middleware/updateimg");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 
@@ -226,7 +227,11 @@ const registration = async (req, res) => {
       confirmPassword,
     } = req.body;
 
-    const image = req.file ? req.file.path : "";
+    if (!req.file) return res.status(400).send("Image is required");
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "user_uploads",
+    });
 
     // ✅ Validation
     if (
@@ -256,10 +261,11 @@ const registration = async (req, res) => {
       return res.status(400).send("Nominee mobile must be in +880 format");
     }
 
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,16}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{6,16}$/;
     if (!passwordPattern.test(password)) {
-      return res.status(400).send("Password must be 8-16 chars, include upper, lower, number & symbol");
+      return res.status(400).send("Password must be 6-16 chars, include upper, lower, number & symbol");
     }
+
 
     if (password !== confirmPassword) {
       return res.status(400).send("Passwords do not match");
@@ -279,7 +285,8 @@ const registration = async (req, res) => {
       email,
       mobile,
       nid,
-      image,
+      image: result.secure_url,
+      imagePublicId: result.public_id,
       reference,
       nomineeName,
       nomineeRelation,
