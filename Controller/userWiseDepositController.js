@@ -1,10 +1,30 @@
 const Deposit = require("../Model/depositModel");
+const DPS = require("../Model/dpsModel");
 const User = require("../Model/userModel");
 
 
 const userWiseDeposit = async (req, res) => {
   try {
     const deposits = await Deposit.aggregate([
+      // Join with DPS to check if isClosed = false
+      {
+        $lookup: {
+          from: "dps",
+          localField: "userId",
+          foreignField: "userId",
+          as: "dpsInfo"
+        }
+      },
+      {
+        $unwind: "$dpsInfo"
+      },
+      {
+        $match: {
+          "dpsInfo.isClosed": false
+        }
+      },
+
+      // Join with User info
       {
         $lookup: {
           from: "users",

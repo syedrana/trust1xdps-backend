@@ -48,6 +48,7 @@ const {
   getAllWithdrawal,
   processWithdrawal,
 } = require("./Controller/withdrawController");
+const closedDpsWithdrawReport = require("./Controller/closeDpsWithdrawReportController.js");
 const dbConnection = require("./helper/dbConnection");
 const multer = require("multer");
 const path = require("path");
@@ -116,6 +117,7 @@ app.post("/requestwithdrawal", checkLogin, requestWithdrawal);
 app.get("/getmywithdrawal", checkLogin, getMyWithdrawal);
 app.get("/getallwithdrawal", adminCheck, getAllWithdrawal);
 app.post("/processwithdrawal", adminCheck, processWithdrawal);
+app.get("/closeddpswithdrawreport", adminCheck, closedDpsWithdrawReport)
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'CORS is working!' });
