@@ -177,9 +177,91 @@ const processWithdrawal = async (req, res) => {
   }
 };
 
+/**
+ * 🔥 Get Total Withdrawal amount
+ */
+const getTotalWithdrawAmount = async (req, res) => {
+  try {
+    const result = await WithdrawRequest.aggregate([
+      { $match: { status: "approved" } },
+      {
+        $group: {
+          _id: null,
+          totalWithdrawAmount: { $sum: "$amount" }
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      totalWithdrawAmount: result[0]?.totalWithdrawAmount || 0
+    });
+  } catch (error) {
+    console.error("Withdraw amount error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * 🔥 Get Total Penalty amount
+ */
+const getTotalPenalty = async (req, res) => {
+  try {
+    const result = await WithdrawRequest.aggregate([
+      { $match: { status: "approved" } },
+      {
+        $group: {
+          _id: null,
+          totalPenalty: { $sum: "$penalty" }
+        }
+      }
+    ]);
+
+    res.status(200).json({
+      totalPenalty: result[0]?.totalPenalty || 0
+    });
+  } catch (error) {
+    console.error("Penalty error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * 🔥 Get Total Deposit without withdraw
+ */
+const getTotalActiveDeposit = async (req, res) => {
+  try {
+    // শুধু যেগুলো এখনো বন্ধ হয়নি (isClosed: false)
+    const result = await DPS.aggregate([
+      {
+        $match: { isClosed: false }
+      },
+      {
+        $group: {
+          _id: null,
+          totalActiveDeposit: { $sum: "$totalDeposit" },
+          dpsCount: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const data = result[0] || {
+      totalActiveDeposit: 0,
+      dpsCount: 0
+    };
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Active DPS deposit calculation error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   requestWithdrawal,
   getMyWithdrawal,
   getAllWithdrawal,
   processWithdrawal,
+  getTotalWithdrawAmount,
+  getTotalPenalty,
+  getTotalActiveDeposit,
 };

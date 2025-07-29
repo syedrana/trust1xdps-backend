@@ -47,6 +47,9 @@ const {
   getMyWithdrawal,
   getAllWithdrawal,
   processWithdrawal,
+  getTotalWithdrawAmount,
+  getTotalPenalty,
+  getTotalActiveDeposit,
 } = require("./Controller/withdrawController");
 const closedDpsWithdrawReport = require("./Controller/closeDpsWithdrawReportController.js");
 const dbConnection = require("./helper/dbConnection");
@@ -117,6 +120,9 @@ app.post("/requestwithdrawal", checkLogin, requestWithdrawal);
 app.get("/getmywithdrawal", checkLogin, getMyWithdrawal);
 app.get("/getallwithdrawal", adminCheck, getAllWithdrawal);
 app.post("/processwithdrawal", adminCheck, processWithdrawal);
+app.get("/gettotalwithdrawamount", adminCheck, getTotalWithdrawAmount);
+app.get("/gettotalpenalty", adminCheck, getTotalPenalty);
+app.get("/gettotalactivedeposit", adminCheck, getTotalActiveDeposit);
 app.get("/closeddpswithdrawreport", adminCheck, closedDpsWithdrawReport)
 
 app.get('/api/test', (req, res) => {
