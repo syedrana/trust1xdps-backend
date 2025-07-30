@@ -52,6 +52,7 @@ const {
   getTotalActiveDeposit,
 } = require("./Controller/withdrawController");
 const closedDpsWithdrawReport = require("./Controller/closeDpsWithdrawReportController.js");
+const {getWithdrawnUserFullDetails} = require("./Controller/userDetailWithWithdrawController.js");
 const dbConnection = require("./helper/dbConnection");
 const multer = require("multer");
 const path = require("path");
@@ -123,7 +124,8 @@ app.post("/processwithdrawal", adminCheck, processWithdrawal);
 app.get("/gettotalwithdrawamount", adminCheck, getTotalWithdrawAmount);
 app.get("/gettotalpenalty", adminCheck, getTotalPenalty);
 app.get("/gettotalactivedeposit", adminCheck, getTotalActiveDeposit);
-app.get("/closeddpswithdrawreport", adminCheck, closedDpsWithdrawReport)
+app.get("/closeddpswithdrawreport", adminCheck, closedDpsWithdrawReport);
+app.get("/userdetailwithwithdraw/:id", adminCheck, getWithdrawnUserFullDetails)
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'CORS is working!' });
