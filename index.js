@@ -4,6 +4,7 @@ const cors = require("cors");
 const securapi = require("./Middleware/secureApi");
 const checkLogin = require("./Middleware/checkLogin");
 const adminCheck = require("./Middleware/checkAdmin.js");
+const checkRole = require("./Middleware/checkRole");
 const {submitContactForm} = require("./Controller/contactController");
 const getcontacts = require("./Controller/getContactController.js");
 const deletecontactmessage = require("./Controller/deleteContactMessageController.js");
@@ -53,6 +54,7 @@ const {
 } = require("./Controller/withdrawController");
 const closedDpsWithdrawReport = require("./Controller/closeDpsWithdrawReportController.js");
 const {getWithdrawnUserFullDetails} = require("./Controller/userDetailWithWithdrawController.js");
+const usdtconvater = require("./Controller/usdtConvaterController.js");
 const dbConnection = require("./helper/dbConnection");
 const multer = require("multer");
 const path = require("path");
@@ -108,7 +110,7 @@ app.post("/user", updateimg.single('image'), securapi, registration);
 app.get("/verify/:token", securapi, verifyEmail);
 app.get("/me", checkLogin, getMe);
 app.put("/update", checkLogin, updateimg.single('image'), updateProfile);
-app.get("/userdashboard", checkLogin, userdashboard);
+app.get("/userdashboard", checkLogin, checkRole(["user"]), userdashboard);
 app.get("/userdepositlist", checkLogin, userdepositlist);
 app.delete("/deleteuseranddeposites/:id", adminCheck, deleteUserAndDeposits)
 app.post("/adminreg", securapi, adminReg);
@@ -126,6 +128,7 @@ app.get("/gettotalpenalty", adminCheck, getTotalPenalty);
 app.get("/gettotalactivedeposit", adminCheck, getTotalActiveDeposit);
 app.get("/closeddpswithdrawreport", adminCheck, closedDpsWithdrawReport);
 app.get("/userdetailwithwithdraw/:id", adminCheck, getWithdrawnUserFullDetails)
+app.get("/usdtconvater", checkLogin, usdtconvater);
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'CORS is working!' });

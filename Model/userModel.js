@@ -37,6 +37,7 @@ const mongoose = require("mongoose");
     nid: {
       type: String,
       required: [true, "NID number is required"],
+      unique: true,
       match: [/^\d{10,17}$/, "NID must be 10 to 17 digits"],
     },
     image: {

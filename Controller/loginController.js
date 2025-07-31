@@ -30,6 +30,7 @@ let login = async (req, res) => {
                     const token = jwt.sign({
                         username: exitingUser.name,
                         userid: exitingUser._id,
+                        role: exitingUser.role,
                     }, process.env.JWT_SECRET,{
                         expiresIn: "1h"
                     });
@@ -37,7 +38,6 @@ let login = async (req, res) => {
                     res.status(200).json({
                         "access_token": token,
                         "message": "Login Successful",
-                        //"course": exitingUser.course
                     });
 
                 }else{
