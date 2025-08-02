@@ -8,16 +8,22 @@ const adminCheck = (req, res, next) => {
       return res.status(401).json({ message: "Access denied. No token provided." });
     }
 
-    const token = authHeader.split(" ")[1]; // ✅ শুধু টোকেন পার্স করলাম
+    try {
+            const token = authHeader.split(" ")[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const { username, userid, role } = decoded;
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            if (!decoded || role !== "admin") {
+              return res.status(403).json({ message: "Access denied. Admins only." });
+            }
 
-    if (decoded.role !== "admin") {
-      return res.status(403).json({ message: "Access denied. Admins only." });
-    }
-
-    req.user = decoded;
-    next();
+            req.username = username;
+            req.userid = userid;
+            req.role = role;
+            next();
+        } catch (err) {
+            return res.status(403).json({ message: "Invalid or expired token!" });
+        }
 
   } catch (error) {
     return res.status(400).json({ message: "Invalid or expired token." });
