@@ -81,54 +81,55 @@ app.use("/uploads", express.static("uploads"));
 
 
 app.post("/contact", securapi, submitContactForm);
-app.get("/getcontacts", adminCheck, getcontacts);
-app.delete("/deletemessage/:id", adminCheck, deletecontactmessage);
+app.get("/getcontacts", adminCheck, checkRole(["admin"]), getcontacts);
+app.delete("/deletemessage/:id", adminCheck, checkRole(["admin"]), deletecontactmessage);
 app.post("/login", securapi, login);
 app.post("/adminLogin", securapi, adminlogin);
-app.get("/useroverview", adminCheck, useroverview );
-app.patch("/userapprove/:id", adminCheck, userapprove);
-app.delete("/userreject/:id", adminCheck, userreject);
-app.get("/depositreport", adminCheck,  getUsersNotDepositedThisMonth);
-app.get("/depositoverview", adminCheck, getUserDepositedReport);
-app.get("/getmonthlyuser", adminCheck,  getMonthlyUserStats );
-app.get("/getmonthlydeposit", adminCheck, getMonthlyDepositStats );
-app.get("/getyearlydeposit", adminCheck,  getYearlyDepositStats);
-app.get("/getyearlymonthlyuserdeposits", adminCheck, getYearlyMonthlyUserDeposits);
-app.post("/deposit/:id", adminCheck, deposit);
-app.put("/updatedeposit/:id", adminCheck, updatedeposit );
-app.delete("/deletedeposit/:id", adminCheck, deletedeposit);
-app.get("/totaldeposit", adminCheck, totaldeposit);
-app.get("/userwisedeposit", adminCheck, userwisedeposit);
-app.get("/userdepositdetail/:id", adminCheck, userdepositdetail);
-app.get("/approveuser", adminCheck, approveuser);
-app.get("/approvedusercount", adminCheck, approvedusercount);
-app.get("/pendingusercount", adminCheck, pendingusercount);
-app.get("/depositrequestcount", adminCheck, depositRequestCount);
-app.get("/withdrawcount", adminCheck, withdrawCount);
-app.get("/pendingapproval", adminCheck, pendingapproval);
+app.get("/useroverview", adminCheck, checkRole(["admin"]), useroverview );
+app.patch("/userapprove/:id", adminCheck, checkRole(["admin"]), userapprove);
+app.delete("/userreject/:id", adminCheck, checkRole(["admin"]), userreject);
+app.get("/depositreport", adminCheck, checkRole(["admin"]),  getUsersNotDepositedThisMonth);
+app.get("/depositoverview", adminCheck, checkRole(["admin"]), getUserDepositedReport);
+app.get("/getmonthlyuser", adminCheck, checkRole(["admin"]),  getMonthlyUserStats );
+app.get("/getmonthlydeposit", adminCheck, checkRole(["admin"]), getMonthlyDepositStats );
+app.get("/getyearlydeposit", adminCheck, checkRole(["admin"]),  getYearlyDepositStats);
+app.get("/getyearlymonthlyuserdeposits", adminCheck, checkRole(["admin"]), getYearlyMonthlyUserDeposits);
+app.post("/deposit/:id", adminCheck, checkRole(["admin"]), deposit);
+app.put("/updatedeposit/:id", adminCheck, checkRole(["admin"]), updatedeposit );
+app.delete("/deletedeposit/:id", adminCheck, checkRole(["admin"]), deletedeposit);
+app.get("/totaldeposit", adminCheck, checkRole(["admin"]), totaldeposit);
+app.get("/userwisedeposit", adminCheck, checkRole(["admin"]), userwisedeposit);
+app.get("/userdepositdetail/:id", adminCheck, checkRole(["admin"]), userdepositdetail);
+app.get("/approveuser", adminCheck, checkRole(["admin"]), approveuser);
+app.get("/approvedusercount", adminCheck, checkRole(["admin"]), approvedusercount);
+app.get("/pendingusercount", adminCheck, checkRole(["admin"]), pendingusercount);
+app.get("/depositrequestcount", adminCheck, checkRole(["admin"]), depositRequestCount);
+app.get("/withdrawcount", adminCheck, checkRole(["admin"]), withdrawCount);
+app.get("/pendingapproval", adminCheck, checkRole(["admin"]), pendingapproval);
+app.get("/getalldepositrequests", adminCheck, checkRole(["admin"]), getAllDepositRequests);
+app.patch("/approveorrejectdepositrequest/:id", adminCheck, checkRole(["admin"]), approveOrRejectDepositRequest);
+app.delete("/deleteuseranddeposites/:id", adminCheck, checkRole(["admin"]), deleteUserAndDeposits)
+app.post("/adminreg", securapi, adminReg);
+app.get("/getallwithdrawal", adminCheck, checkRole(["admin"]), getAllWithdrawal);
+app.post("/processwithdrawal", adminCheck, checkRole(["admin"]), processWithdrawal);
+app.get("/gettotalwithdrawamount", adminCheck, checkRole(["admin"]), getTotalWithdrawAmount);
+app.get("/gettotalpenalty", adminCheck, checkRole(["admin"]), getTotalPenalty);
+app.get("/gettotalactivedeposit", adminCheck, checkRole(["admin"]), getTotalActiveDeposit);
+app.get("/closeddpswithdrawreport", adminCheck, checkRole(["admin"]), closedDpsWithdrawReport);
+app.get("/userdetailwithwithdraw/:id", adminCheck, checkRole(["admin"]), getWithdrawnUserFullDetails)
+
 app.post("/user", updateimg.single('image'), securapi, registration);
 app.get("/verify/:token", securapi, verifyEmail);
-app.get("/me", checkLogin, getMe);
-app.put("/update", checkLogin, updateimg.single('image'), updateProfile);
+app.get("/me", checkLogin, checkRole(["user"]), getMe);
+app.put("/update", checkLogin, checkRole(["user"]), updateimg.single('image'), updateProfile);
 app.get("/userdashboard", checkLogin, checkRole(["user"]), userdashboard);
-app.get("/userdepositlist", checkLogin, userdepositlist);
-app.delete("/deleteuseranddeposites/:id", adminCheck, deleteUserAndDeposits)
-app.post("/adminreg", securapi, adminReg);
-app.post("/createdepositrequest", checkLogin, createDepositRequest);
-app.get("/getalldepositrequests", adminCheck, getAllDepositRequests);
-app.patch("/approveorrejectdepositrequest/:id", adminCheck, approveOrRejectDepositRequest);
-app.get("/getmymissingdepositmonths", checkLogin, getMyMissingDepositMonths);
-app.get("/getmydepositrequests", checkLogin, getMyDepositRequests);
-app.post("/requestwithdrawal", checkLogin, requestWithdrawal);
-app.get("/getmywithdrawal", checkLogin, getMyWithdrawal);
-app.get("/getallwithdrawal", adminCheck, getAllWithdrawal);
-app.post("/processwithdrawal", adminCheck, processWithdrawal);
-app.get("/gettotalwithdrawamount", adminCheck, getTotalWithdrawAmount);
-app.get("/gettotalpenalty", adminCheck, getTotalPenalty);
-app.get("/gettotalactivedeposit", adminCheck, getTotalActiveDeposit);
-app.get("/closeddpswithdrawreport", adminCheck, closedDpsWithdrawReport);
-app.get("/userdetailwithwithdraw/:id", adminCheck, getWithdrawnUserFullDetails)
-app.get("/usdtconvater", checkLogin, usdtconvater);
+app.get("/userdepositlist", checkLogin, checkRole(["user"]), userdepositlist);
+app.post("/createdepositrequest", checkLogin, checkRole(["user"]), createDepositRequest);
+app.get("/getmymissingdepositmonths", checkLogin, checkRole(["user"]), getMyMissingDepositMonths);
+app.get("/getmydepositrequests", checkLogin, checkRole(["user"]), getMyDepositRequests);
+app.post("/requestwithdrawal", checkLogin, checkRole(["user"]), requestWithdrawal);
+app.get("/getmywithdrawal", checkLogin, checkRole(["user"]), getMyWithdrawal);
+app.get("/usdtconvater", checkLogin, checkRole(["user"]), usdtconvater);
 
 app.get('/api/test', (req, res) => {
   res.json({ message: 'CORS is working!' });

@@ -38,6 +38,7 @@ let login = async (req, res) => {
                     res.status(200).json({
                         "access_token": token,
                         "message": "Login Successful",
+                        "role": exitingUser.role,
                     });
 
                 }else{
