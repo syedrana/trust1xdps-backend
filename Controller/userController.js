@@ -103,7 +103,7 @@ const registration = async (req, res) => {
 
     // ✅ Generate Email Verification Token
     const token = jwt.sign(
-      { id: user._id },
+      { userid: user._id },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
