@@ -48,6 +48,7 @@ const getUsersNotDepositedThisMonth = async (req, res) => {
     });
 
     const missingMonthsByUser = {};
+    const notmissingMonthsByUser = {};
     const depositedUsers = [];
     const notDepositedUsers = [];
 
@@ -76,26 +77,46 @@ const getUsersNotDepositedThisMonth = async (req, res) => {
         notDepositedUsers.push(user);
       }
 
-      missingMonthsByUser[userId] = {
-        id: user._id,
-        name: `${user.firstName} ${user.lastName || ''}`,
-        email: user.email,
-        mobile: user.mobile,
-        address: user.address,
-        image: user.image,
-        approvedAt: user.approvedAt,
-        startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
-        depositedMonths: Array.from(depositedMonths),
-        missingMonths,
-        totalMonths,
-        totalDeposited: allDeposits
-          .filter((d) => d.userId.toString() === userId)
-          .reduce((sum, d) => sum + d.amount, 0),
-      };
+      if (missingMonths.length === 0) {
+        notmissingMonthsByUser[userId] = {
+          id: user._id,
+          name: `${user.firstName} ${user.lastName || ''}`,
+          email: user.email,
+          mobile: user.mobile,
+          address: user.address,
+          image: user.image,
+          approvedAt: user.approvedAt,
+          startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
+          depositedMonths: Array.from(depositedMonths),
+          missingMonths,
+          totalMonths,
+          totalDeposited: allDeposits
+            .filter((d) => d.userId.toString() === userId)
+            .reduce((sum, d) => sum + d.amount, 0),
+        };
+      } else {
+         missingMonthsByUser[userId] = {
+          id: user._id,
+          name: `${user.firstName} ${user.lastName || ''}`,
+          email: user.email,
+          mobile: user.mobile,
+          address: user.address,
+          image: user.image,
+          approvedAt: user.approvedAt,
+          startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
+          depositedMonths: Array.from(depositedMonths),
+          missingMonths,
+          totalMonths,
+          totalDeposited: allDeposits
+            .filter((d) => d.userId.toString() === userId)
+            .reduce((sum, d) => sum + d.amount, 0),
+        };
+      }
     }
 
     res.status(200).json({
       currentMonth,
+      notmissingMonthsByUser,
       missingMonthsByUser,
       totalUsers: allUsers.length,
       totalDeposited: depositedUsers.length,
