@@ -129,4 +129,16 @@ const mongoose = require("mongoose");
     next();
   });
 
+
+  registrationSchema.virtual("dps", {
+    ref: "DPS",
+    localField: "_id",
+    foreignField: "userId",
+    justOne: true,
+  });
+
+  registrationSchema.set("toObject", { virtuals: true });
+  registrationSchema.set("toJSON", { virtuals: true });
+
+
   module.exports = mongoose.model("User", registrationSchema);

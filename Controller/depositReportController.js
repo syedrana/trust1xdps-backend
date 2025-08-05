@@ -1,5 +1,6 @@
 const User = require("../Model/userModel");
 const Deposit = require("../Model/depositModel");
+const DPS = require("../Model/dpsModel");
 
 // ইউটিলিটি ফাংশন: দুটি তারিখের মধ্যে সব মাসের নামের লিস্ট তৈরি করে
 function getMonthList(start, end) {
@@ -27,16 +28,22 @@ const getUsersNotDepositedThisMonth = async (req, res) => {
       year: "numeric",
     });
 
-    const allUsers = await User.find({ isApproved: true });
+    const allUsers = await User.find({ isApproved: true })
+      .populate("dps")
+      .lean();
+
+    const allActiveUsers = allUsers.filter(user => {
+      return !user.dps || user.dps.isClosed === false;
+    });
+    
     const allDeposits = await Deposit.find({}).sort({ createdAt: 1 }); // Earliest deposit first
 
-    const totalDepositAmount = allDeposits.reduce((sum, d) => sum + d.amount, 0);
+    const allActiveDps = await DPS.find({ isClosed: false }).populate("userId");
 
-    const depositedUserIdsThisMonth = new Set(
-      allDeposits
-        .filter((d) => d.month === currentMonth)
-        .map((d) => d.userId.toString())
-    );
+    const totalDepositAmount = allActiveDps
+      .filter(dps => dps.userId?.isApproved) // শুধু যাদের অ্যাকাউন্ট এপ্রুভড
+      .reduce((sum, dps) => sum + dps.totalDeposit, 0);
+
 
     const depositsByUser = {};
     allDeposits.forEach((d) => {
@@ -47,12 +54,13 @@ const getUsersNotDepositedThisMonth = async (req, res) => {
       depositsByUser[userId].add(d.month);
     });
 
+    const totalActiveUser = {};
     const missingMonthsByUser = {};
     const notmissingMonthsByUser = {};
     const depositedUsers = [];
     const notDepositedUsers = [];
 
-    for (const user of allUsers) {
+    for (const user of allActiveUsers) {
       const userId = user._id.toString();
 
       // 🔥 Update: প্রথম ডিপোজিট না থাকলে fallback আজকের তারিখ
@@ -65,65 +73,43 @@ const getUsersNotDepositedThisMonth = async (req, res) => {
       const depositedMonths = depositsByUser[userId] || new Set();
       const missingMonths = months.filter((month) => !depositedMonths.has(month));
 
-      // if (depositedUserIdsThisMonth.has(userId)) {
-      //   depositedUsers.push(user);
-      // } else {
-      //   notDepositedUsers.push(user);
-      // }
+      const userInfo = {
+        id: user._id,
+        name: `${user.firstName} ${user.lastName || ''}`,
+        email: user.email,
+        mobile: user.mobile,
+        address: user.address,
+        image: user.image,
+        approvedAt: user.approvedAt,
+        startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
+        depositedMonths: Array.from(depositedMonths),
+        missingMonths,
+        totalMonths,
+        totalDeposited: allDeposits
+          .filter((d) => d.userId.toString() === userId)
+          .reduce((sum, d) => sum + d.amount, 0),     
+      }
+
+      totalActiveUser[userId] = userInfo;
 
       if (missingMonths.length === 0) {
         depositedUsers.push(user);
+        notmissingMonthsByUser[userId] = userInfo;
       } else {
         notDepositedUsers.push(user);
-      }
-
-      if (missingMonths.length === 0) {
-        notmissingMonthsByUser[userId] = {
-          id: user._id,
-          name: `${user.firstName} ${user.lastName || ''}`,
-          email: user.email,
-          mobile: user.mobile,
-          address: user.address,
-          image: user.image,
-          approvedAt: user.approvedAt,
-          startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
-          depositedMonths: Array.from(depositedMonths),
-          missingMonths,
-          totalMonths,
-          totalDeposited: allDeposits
-            .filter((d) => d.userId.toString() === userId)
-            .reduce((sum, d) => sum + d.amount, 0),
-        };
-      } else {
-         missingMonthsByUser[userId] = {
-          id: user._id,
-          name: `${user.firstName} ${user.lastName || ''}`,
-          email: user.email,
-          mobile: user.mobile,
-          address: user.address,
-          image: user.image,
-          approvedAt: user.approvedAt,
-          startDate, // ✅ রিপোর্টে শুরু তারিখও দেখাতে পারো চাইলে
-          depositedMonths: Array.from(depositedMonths),
-          missingMonths,
-          totalMonths,
-          totalDeposited: allDeposits
-            .filter((d) => d.userId.toString() === userId)
-            .reduce((sum, d) => sum + d.amount, 0),
-        };
+        missingMonthsByUser[userId] = userInfo;
       }
     }
 
     res.status(200).json({
       currentMonth,
+      totalActiveUser,
       notmissingMonthsByUser,
       missingMonthsByUser,
-      totalUsers: allUsers.length,
+      totalUsers: allActiveUsers.length,
       totalDeposited: depositedUsers.length,
       totalNotDeposited: notDepositedUsers.length,
       totalDepositAmount,
-      depositedUsers,
-      notDepositedUsers,
     });
 
   } catch (error) {
