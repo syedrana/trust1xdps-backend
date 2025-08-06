@@ -22,11 +22,9 @@ const { getUserDepositedReport }  = require("./Controller/depositOverviewControl
 const { getMonthlyUserStats } = require('./Controller/getMonthlyUserController.js');
 const { getMonthlyDepositStats } = require('./Controller/getMonthlyDepositController.js');
 const {getYearlyDepositStats} = require("./Controller/getYearlyDepositController.js")
-const {getYearlyMonthlyUserDeposits} =require("./Controller/getYearlyMonthlyUserDeposits.js");
 const totaldeposit = require("./Controller/totalDepositController.js");
 const userwisedeposit  = require("./Controller/userWiseDepositController.js");
 const userdepositdetail = require("./Controller/userDepositDetailController.js");
-const approveuser = require("./Controller/approveuserController.js");
 const approvedusercount = require("./Controller/approvedUserCountController.js");
 const pendingusercount = require("./Controller/pendingUserCountController.js");
 const {depositRequestCount, withdrawCount} = require("./Controller/pendingRequestController.js");
@@ -93,14 +91,12 @@ app.get("/depositoverview", adminCheck, checkRole(["admin"]), getUserDepositedRe
 app.get("/getmonthlyuser", adminCheck, checkRole(["admin"]),  getMonthlyUserStats );
 app.get("/getmonthlydeposit", adminCheck, checkRole(["admin"]), getMonthlyDepositStats );
 app.get("/getyearlydeposit", adminCheck, checkRole(["admin"]),  getYearlyDepositStats);
-app.get("/getyearlymonthlyuserdeposits", adminCheck, checkRole(["admin"]), getYearlyMonthlyUserDeposits);
 app.post("/deposit/:id", adminCheck, checkRole(["admin"]), deposit);
 app.put("/updatedeposit/:id", adminCheck, checkRole(["admin"]), updatedeposit );
 app.delete("/deletedeposit/:id", adminCheck, checkRole(["admin"]), deletedeposit);
 app.get("/totaldeposit", adminCheck, checkRole(["admin"]), totaldeposit);
 app.get("/userwisedeposit", adminCheck, checkRole(["admin"]), userwisedeposit);
 app.get("/userdepositdetail/:id", adminCheck, checkRole(["admin"]), userdepositdetail);
-app.get("/approveuser", adminCheck, checkRole(["admin"]), approveuser);
 app.get("/approvedusercount", adminCheck, checkRole(["admin"]), approvedusercount);
 app.get("/pendingusercount", adminCheck, checkRole(["admin"]), pendingusercount);
 app.get("/depositrequestcount", adminCheck, checkRole(["admin"]), depositRequestCount);
